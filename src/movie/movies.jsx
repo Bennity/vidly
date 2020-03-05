@@ -5,25 +5,25 @@ class movies extends Component {
   fetchMovies = () => {
     let moviewithliked = [];
     getMovies().map(obj => {
-      return moviewithliked.push(Object.assign(obj, { liked: 0 }));
+      return moviewithliked.push(Object.assign(obj, { liked: "false" }));
     });
     return moviewithliked;
   };
 
   state = {
-    movies: this.fetchMovies(),
-    filled: "false"
+    movies: this.fetchMovies()
   };
 
   handleDelete = id => {
-    this.state.movies.filter(obj => {
-      return obj.id !== id;
-    });
+    const movies = this.state.movies.filter(obj => obj.id !== id);
+    console.log(movies, id);
+    this.setState({ movies });
   };
 
   favmovies = id => {
     return this.state.movies.map(obj => {
       if (id === obj.id) {
+        console.log(obj);
         return (obj.filled = "true");
       }
     });
@@ -50,7 +50,7 @@ class movies extends Component {
           <td onClick={() => this.favmovies(obj._id)}>
             <i
               className="fa fa-heart"
-              aria-hidden={this.state.movies.filled}
+              aria-hidden={this.state.movies.liked}
             ></i>
           </td>
         </tr>
@@ -62,7 +62,7 @@ class movies extends Component {
   render() {
     return (
       <React.Fragment>
-        <p>Showing {} movies in the Database.</p>
+        <p>Showing {this.state.movies.length} movies in the Database.</p>
         <table className="table">
           <thead>
             <tr>
