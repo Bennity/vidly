@@ -1,29 +1,68 @@
 import React, { Component } from "react";
-import Movie from "./movie";
+import { getMovies } from "./../services/fakeMovieService";
 
 class movies extends Component {
+  fetchMovies = () => {
+    let moviewithliked = [];
+    getMovies().map(obj => {
+      return moviewithliked.push(Object.assign(obj, { liked: 0 }));
+    });
+    return moviewithliked;
+  };
+
   state = {
-    movies: Movie,
-    movielength: Object.keys(getMovies()).length,
+    movies: this.fetchMovies(),
     filled: "false"
   };
 
-  handleDelete = movie => {
-    this.setState(deleteMovie(movie));
-    this.setState({ movielength: Object.keys(getMovies()).length });
+  handleDelete = id => {
+    this.state.movies.filter(obj => {
+      return obj.id !== id;
+    });
   };
 
-  favmovies = _id => {
-    let filled = this.state.filled;
-    filled = "true";
-    console.log(filled, _id);
-    return this.setState({ filled });
+  favmovies = id => {
+    return this.state.movies.map(obj => {
+      if (id === obj.id) {
+        return (obj.filled = "true");
+      }
+    });
+  };
+
+  renderMovies = () => {
+    let renderedMovies = [];
+    this.fetchMovies().map((obj, index) => {
+      return renderedMovies.push(
+        <tr key={"movieRow_" + index}>
+          <td>{obj.title}</td>
+          <td>{obj.genre.name}</td>
+          <td>{obj.numberInStock}</td>
+          <td>{obj.dailyRentalRate}</td>
+          <td>
+            <button
+              onClick={() => this.handleDelete(obj._id)}
+              type="button"
+              className="btn btn-danger"
+            >
+              Delete
+            </button>
+          </td>
+          <td onClick={() => this.favmovies(obj._id)}>
+            <i
+              className="fa fa-heart"
+              aria-hidden={this.state.movies.filled}
+            ></i>
+          </td>
+        </tr>
+      );
+    });
+    return renderedMovies;
   };
 
   render() {
     return (
       <React.Fragment>
-        <p>Showing {this.state.movielength} movies in the Database.</p>
+        <p>Showing {} movies in the Database.</p>
         <table className="table">
           <thead>
             <tr>
@@ -33,13 +72,7 @@ class movies extends Component {
               <th scope="col">Rate</th>
             </tr>
           </thead>
-          <tbody>
-            <Movie
-              onDelete={this.handleDelete}
-              onFavMovie={this.favmovies}
-              onFilled={this.filled}
-            />
-          </tbody>
+          <tbody>{this.renderMovies()}</tbody>
         </table>
       </React.Fragment>
     );
