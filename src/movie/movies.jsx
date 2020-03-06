@@ -11,27 +11,26 @@ class movies extends Component {
   };
 
   state = {
-    movies: this.fetchMovies()
+    movies: this.fetchMovies(),
+    favmovies: {}
   };
 
   handleDelete = id => {
-    const movies = this.state.movies.filter(obj => obj.id !== id);
+    const movies = this.state.movies.filter(obj => obj._id !== id);
     console.log(movies, id);
     this.setState({ movies });
   };
 
   favmovies = id => {
-    return this.state.movies.map(obj => {
-      if (id === obj.id) {
-        console.log(obj);
-        return (obj.filled = "true");
-      }
-    });
+    const favmovies = [];
+    const newmovie = this.state.movies.filter(obj => obj._id === id);
+    favmovies.push(newmovie);
+    console.log(favmovies, newmovie);
   };
 
   renderMovies = () => {
     let renderedMovies = [];
-    this.fetchMovies().map((obj, index) => {
+    this.state.movies.map((obj, index) => {
       return renderedMovies.push(
         <tr key={"movieRow_" + index}>
           <td>{obj.title}</td>
@@ -47,10 +46,11 @@ class movies extends Component {
               Delete
             </button>
           </td>
-          <td onClick={() => this.favmovies(obj._id)}>
+          <td>
             <i
+              onClick={() => this.favmovies(obj._id)}
               className="fa fa-heart"
-              aria-hidden={this.state.movies.liked}
+              aria-hidden="false"
             ></i>
           </td>
         </tr>
