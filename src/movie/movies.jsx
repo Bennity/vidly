@@ -24,19 +24,33 @@ class movies extends Component {
     this.setState({ movies });
   };
 
-  favmovies = id => {
-    const favmovie = this.state.movies.filter(obj => obj._id === id);
-    this.fillheartwithliked(id);
-    const favmovies = [...this.state.favmovies];
-    favmovies.push(favmovie);
-    this.setState({ favmovies });
-  };
-
-  fillheartwithliked = id => {
+  fillHeart = id => {
     const movies = [...this.state.movies];
     const movie = movies.filter(obj => obj._id === id);
-    movie.map(obj => (obj.liked = "fa fa-heart"));
-    //hallo github
+    this.addtoFavs(movie);
+    if (movie.map(obj => obj.liked) == "fa fa-heart-o") {
+      movie.map(obj => (obj.liked = "fa fa-heart"));
+      this.setState({ movie });
+    } else {
+      movie.map(obj => (obj.liked = "fa fa-heart-o"));
+      this.setState({ movie });
+    }
+  };
+
+  addtoFavs = movie => {
+    if (
+      Object.entries(this.state.favmovies).length === 0 &&
+      this.state.favmovies.constructor === Object
+    ) {
+      let favmovies = movie;
+      this.setState(favmovies);
+    } else {
+      const favmovies = [...this.state.favmovies];
+      let favmovie = favmovies.filter(obj => obj.liked == "fa fa-heart");
+      console.log(favmovie);
+      favmovies.push(favmovie);
+      this.setState({ favmovies });
+    }
   };
 
   render() {
@@ -58,7 +72,7 @@ class movies extends Component {
                 key={movie._id}
                 _id={movie._id}
                 onDelete={this.handleDelete}
-                onFavmovie={this.favmovies}
+                onFavmovie={this.fillHeart}
                 title={movie.title}
                 genre={movie.genre.name}
                 numberInStock={movie.numberInStock}
