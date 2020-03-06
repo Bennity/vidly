@@ -3,16 +3,18 @@ import { getMovies } from "./../services/fakeMovieService";
 import Movie from "./movie";
 
 class movies extends Component {
-  /*  fetchMovies = () => {
+  fetchMovies = () => {
     let moviewithliked = [];
     getMovies().map(obj => {
-      return moviewithliked.push(Object.assign(obj, { liked: "fa fa-heart" }));
+      return moviewithliked.push(
+        Object.assign(obj, { liked: "fa fa-heart-o" })
+      );
     });
     return moviewithliked;
-  }; */
+  };
 
   state = {
-    movies: getMovies(),
+    movies: this.fetchMovies(),
     favmovies: {}
   };
 
@@ -30,8 +32,10 @@ class movies extends Component {
     this.setState({ favmovies });
   };
 
-  fillheartwithliked = favmovies => {
-    return (favmovies.liked = "fa fa-heart-o");
+  fillheartwithliked = id => {
+    const movies = [...this.state.movies];
+    const movie = movies.filter(obj => obj._id === id);
+    movie.map(obj => (obj.liked = "fa fa-heart"));
   };
 
   render() {
@@ -51,12 +55,14 @@ class movies extends Component {
             {this.state.movies.map(movie => (
               <Movie
                 key={movie._id}
+                _id={movie._id}
                 onDelete={this.handleDelete}
                 onFavmovie={this.favmovies}
                 title={movie.title}
                 genre={movie.genre.name}
                 numberInStock={movie.numberInStock}
                 dailyRentalRate={movie.dailyRentalRate}
+                favorite={movie.liked}
               />
             ))}
           </tbody>

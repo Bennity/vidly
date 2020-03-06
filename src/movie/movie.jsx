@@ -11,7 +11,7 @@ class movie extends Component {
           <td>{this.props.dailyRentalRate}</td>
           <td>
             <button
-              onClick={() => this.props.onDelete(this.props.movie._id)}
+              onClick={() => this.props.onDelete(this.props._id)}
               type="button"
               className="btn btn-danger"
             >
@@ -20,8 +20,8 @@ class movie extends Component {
           </td>
           <td>
             <i
-              onClick={() => this.props.onFavmovie(this.props.movie._id)}
-              className="fa fa-heart"
+              onClick={() => this.props.onFavmovie(this.props._id)}
+              className={this.props.favorite}
               aria-hidden="false"
             ></i>
           </td>
