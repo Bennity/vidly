@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { getMovies } from "./../services/fakeMovieService";
 import Movie from "./movie";
 import Pagination from "../pagination/pagination";
-import movie from "./movie";
+import { paginate } from "../utils/paginate";
+import Genre from "../genre/genre";
 
 class movies extends Component {
   fetchMovies = () => {
@@ -12,34 +13,14 @@ class movies extends Component {
         Object.assign(obj, { liked: "fa fa-heart-o" })
       );
     });
-    this.calcPages(moviewithliked);
     return moviewithliked;
-  };
-
-  calcPages = moviewithliked => {
-    let copyofmovies = [...moviewithliked];
-    let pagecounter = 0;
-    let arraywithmovies = [];
-    const moviesperpage = 4;
-    let arraywithpages = [];
-
-    for (let i = 0; i <= copyofmovies.length; i++) {
-      pagecounter++;
-      arraywithmovies.push(copyofmovies[i]);
-      //copyofmovies.splice(copyofmovies[i], 1);
-      if (pagecounter === moviesperpage) {
-        arraywithpages.push(arraywithmovies);
-        pagecounter = 0;
-        arraywithmovies = [];
-        copyofmovies.splice(copyofmovies[i], 4);
-        i = -1;
-      }
-    }
   };
 
   state = {
     movies: this.fetchMovies(),
-    pages: {}
+    pageSize: 4,
+    currentPage: 1,
+    genre: []
   };
 
   handleDelete = id => {
@@ -61,54 +42,29 @@ class movies extends Component {
     }
   };
 
-  addtoFavs = movie => {
-    /* if (
-      Object.entries(this.state.favmovies).length === 0 &&
-      this.state.favmovies.constructor === Object
-    ) {
-      let favmovies = movie;
-      this.setState({ favmovies });
-    }
+  handlePageChange = page => {
+    this.setState({ currentPage: page });
+  };
 
-    let counter;
-
-    if (counter === null) {
-      let favmovies = movie;
-      this.setState({ favmovies: movie });
-      counter++;
+  handleGenreChange = genre => {
+    if (genre == "All Genres") {
+      let movies = this.state.movies.map(obj => obj);
+      this.setState({ genre: movies });
     } else {
-      let pass;
-
-      for (let key in this.state.favmovies) {
-        console.log(key, this.state.favmovies[key]);
-      }
-
-       this.state.favmovies.forEach(element => {
-        if (movie.map(obj => obj._id) === element.map(obj => obj._id)) {
-          pass = false;
-        } else {
-          pass = true;
-        }
-      });
-
-      if (pass) {
-        console.log("passed");
-        const favmovies = [...this.state.favmovies];
-        favmovies.push(movie);
-        this.setState({ favmovies });
-      } else if (!pass) {
-        console.log("not passed");
-        const favmovies = [...this.state.favmovies];
-        favmovies.splice(movie);
-        this.setState({ favmovies });
-      }
-    } */
+      const movies = this.state.movies.filter(obj => obj.genre.name === genre);
+      console.log(movies);
+      this.setState({ genre: movies, currentPage: 1 });
+    }
   };
 
   render() {
     return (
       <React.Fragment>
         <p>Showing {this.state.movies.length} movies in the Database.</p>
+        <Genre
+          genre={this.state.movies.map(obj => obj.genre.name)}
+          onGenreChange={this.handleGenreChange}
+        />
         <table className="table">
           <thead>
             <tr>
@@ -119,7 +75,11 @@ class movies extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.movies.map(movie => (
+            {paginate(
+              this.state.genre,
+              this.state.currentPage,
+              this.state.pageSize
+            ).map(movie => (
               <Movie
                 key={movie._id}
                 _id={movie._id}
@@ -133,7 +93,12 @@ class movies extends Component {
               />
             ))}
           </tbody>
-          <Pagination />
+          <Pagination
+            itemsCount={this.state.movies.length}
+            pageSize={this.state.pageSize}
+            currentPage={this.state.currentPage}
+            onPageChange={this.handlePageChange}
+          />
         </table>
       </React.Fragment>
     );
