@@ -9,8 +9,32 @@
       "request": "launch",
       "name": "Launch Chrome against localhost",
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}",
-      "skipFiles": ["<node_internals>/**/*.js"]
+      "webRoot": "${workspaceFolder}/src"
     }
   ]
 }
+
+/* {
+  "version": "0.1.0",
+  "configurations": [
+    {
+      "name": "Attach to url with files served from ./out",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "url": "localhost:3000",
+      "webRoot": "${workspaceFolder}/src"
+      //"skipFiles": node_modules/react/*.min.js
+    }
+  ]
+} */
+
+/* Windows
+
+    Right click the Chrome shortcut, and select properties
+    In the "target" field, append --remote-debugging-port=9222
+    Or in a command prompt, execute <path to chrome>/chrome.exe --remote-debugging-port=9222
+
+Linux
+
+    In a terminal, launch google-chrome --remote-debugging-port=9222 */
