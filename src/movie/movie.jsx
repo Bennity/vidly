@@ -1,10 +1,14 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 const movie = props => {
   return (
     <React.Fragment>
       <tr>
-        <td>{props.title}</td>
+        <li key={props._id}>
+          <Link to={`/movies/${props._id}`}>{props.title}</Link>
+        </li>
+
         <td>{props.genre}</td>
         <td>{props.numberInStock}</td>
         <td>{props.dailyRentalRate}</td>

@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import Movies from "./movie/movies";
-import { Route } from "react-router-dom";
+import { Route, Redirect, Switch } from "react-router-dom";
 import Navbar from "./navbar/navbar";
 import { getMovies } from "./services/fakeMovieService";
 import Pagination from "./pagination/pagination";
 import Rentals from "./rentals/rentals";
 import Customers from "./customers/customers";
+import NotFound from "./not found/notFound";
+
+//implement sort and orderby mit lodash
+//Jquery lernen
 
 class App extends Component {
   fetchMovies = () => {
@@ -64,25 +68,30 @@ class App extends Component {
     return (
       <React.Fragment>
         <Navbar />
-        <Route
-          path="/Movies"
-          render={props => (
-            <Movies
-              {...props}
-              movies={this.state.movies}
-              genre={this.state.genre}
-              genreLength={this.state.genre.length}
-              movieLength={this.state.movies.length}
-              onGenreChange={this.handleGenreChange}
-              pageSize={this.state.pageSize}
-              currentPage={this.state.currentPage}
-              onDelete={this.handleDelete}
-              onLiked={this.fillHeart}
-            />
-          )}
-        />
-        <Route path="/Customers" component={Customers} />
-        <Route path="/Rentals" component={Rentals} />
+        <Switch>
+          <Route
+            path="/Movies"
+            render={props => (
+              <Movies
+                {...props}
+                movies={this.state.movies}
+                genre={this.state.genre}
+                genreLength={this.state.genre.length}
+                movieLength={this.state.movies.length}
+                onGenreChange={this.handleGenreChange}
+                pageSize={this.state.pageSize}
+                currentPage={this.state.currentPage}
+                onDelete={this.handleDelete}
+                onLiked={this.fillHeart}
+              />
+            )}
+          />
+          <Redirect exact from="/" to="/Movies" />
+          <Route path="/Customers" component={Customers} />
+          <Route path="/Rentals" component={Rentals} />
+          <Route path="/not-found" component={NotFound} />
+          <Redirect to="/not-found" />
+        </Switch>
         <Pagination
           itemsCount={this.state.movies.length}
           pageSize={this.state.pageSize}
