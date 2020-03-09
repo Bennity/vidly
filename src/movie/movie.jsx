@@ -6,7 +6,7 @@ const movie = props => {
     <React.Fragment>
       <tr>
         <li key={props._id}>
-          <Link to={`/movies/${props._id}`}>{props.title}</Link>
+          <Link to={`/Movies/${props._id}`}>{props.title}</Link>
         </li>
 
         <td>{props.genre}</td>

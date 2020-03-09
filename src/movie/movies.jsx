@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Movie from "./movie";
 import { paginate } from "../utils/paginate";
 import Genre from "../genre/genre";
+import Pagination from "../pagination/pagination";
 
 const movies = props => {
   return (
@@ -43,6 +44,12 @@ const movies = props => {
             />
           ))}
         </tbody>
+        <Pagination
+          itemsCount={props.movies.length}
+          pageSize={props.pageSize}
+          currentPage={props.currentPage}
+          onPageChange={props.onPageChange}
+        />
       </table>
     </React.Fragment>
   );

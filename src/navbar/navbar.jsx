@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const navbar = props => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <a className="navbar-brand" href="#">
+      <Link className="navbar-brand" to="/">
         <Link to="/">Vidly</Link>
-      </a>
+      </Link>
       <button
         className="navbar-toggler"
         type="button"
@@ -21,19 +21,29 @@ const navbar = props => {
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav">
           <li className="nav-item active">
-            <a className="nav-link" href="#">
+            <NavLink className="nav-link" to="/Movies">
               <Link to="/Movies/">Movies</Link>
-            </a>
+            </NavLink>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="#">
+            <NavLink className="nav-link" to="/Customers">
               <Link to="/Customers">Customers</Link>
-            </a>
+            </NavLink>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="#">
+            <NavLink className="nav-link" to="/Rentals">
               <Link to="/Rentals">Rentals</Link>
-            </a>
+            </NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/Rentals">
+              <Link to="/Login">Login</Link>
+            </NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/Register">
+              <Link to="/Register">Register</Link>
+            </NavLink>
           </li>
         </ul>
       </div>

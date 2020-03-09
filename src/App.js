@@ -3,13 +3,16 @@ import Movies from "./movie/movies";
 import { Route, Redirect, Switch } from "react-router-dom";
 import Navbar from "./navbar/navbar";
 import { getMovies } from "./services/fakeMovieService";
-import Pagination from "./pagination/pagination";
 import Rentals from "./rentals/rentals";
 import Customers from "./customers/customers";
 import NotFound from "./not found/notFound";
+import MovieForm from "./movie/movieForm";
+import LoginForm from "./forms/loginForm";
+import RegisterForm from "./forms/registerForm";
 
 //implement sort and orderby mit lodash
 //Jquery lernen
+//Specific routes on the top!!!
 
 class App extends Component {
   fetchMovies = () => {
@@ -69,6 +72,7 @@ class App extends Component {
       <React.Fragment>
         <Navbar />
         <Switch>
+          <Route path="/Movies/:id" component={MovieForm} />
           <Route
             path="/Movies"
             render={props => (
@@ -79,6 +83,7 @@ class App extends Component {
                 genreLength={this.state.genre.length}
                 movieLength={this.state.movies.length}
                 onGenreChange={this.handleGenreChange}
+                onPageChange={this.handlePageChange}
                 pageSize={this.state.pageSize}
                 currentPage={this.state.currentPage}
                 onDelete={this.handleDelete}
@@ -89,15 +94,11 @@ class App extends Component {
           <Redirect exact from="/" to="/Movies" />
           <Route path="/Customers" component={Customers} />
           <Route path="/Rentals" component={Rentals} />
+          <Route path="/Login" component={LoginForm} />
+          <Route path="/Register" component={RegisterForm} />
           <Route path="/not-found" component={NotFound} />
           <Redirect to="/not-found" />
         </Switch>
-        <Pagination
-          itemsCount={this.state.movies.length}
-          pageSize={this.state.pageSize}
-          currentPage={this.state.currentPage}
-          onPageChange={this.handlePageChange}
-        />
       </React.Fragment>
     );
   }
