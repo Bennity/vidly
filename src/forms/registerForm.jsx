@@ -1,15 +1,18 @@
 import React, { Component } from "react";
-import Joi from "joi";
+import Joi from "joi-browser";
 
 class registerForm extends Component {
   handleSubmit = e => {
     e.preventDefault();
+    const errors = this.validate();
+    this.setState({ errors: errors || {} });
+    if (errors) return;
     console.log("submit");
   };
 
   handleChange = e => {
     const errors = { ...this.state.errors };
-    const errorMessage = this.validate(e.currentTarget);
+    const errorMessage = this.validateProperty(e.currentTarget);
     if (errorMessage) errors[e.currentTarget.name] = errorMessage;
     else delete errors[e.currentTarget.name];
 
@@ -20,12 +23,20 @@ class registerForm extends Component {
 
   validate = () => {
     const result = Joi.validate(this.state.account, this.schema);
+    console.log(result);
     if (!result.error) return null;
 
     const errors = {};
     for (let item of result.error.details) errors[item.path[0]] = item.message;
 
     return errors;
+  };
+
+  validateProperty = ({ name, value }) => {
+    const obj = { [name]: value };
+    const schema = { [name]: this.schema[name] };
+    const { error } = Joi.validate(obj, schema);
+    return error ? error.details[0].message : null;
   };
 
   state = {
@@ -55,10 +66,12 @@ class registerForm extends Component {
               value={this.state.account.emailaddress}
               name="emailaddress"
             />
+            {this.state.errors.emailaddress && (
+              <div className="alert alert-danger">
+                {this.state.errors.emailaddress}
+              </div>
+            )}
           </div>
-          {this.state.error && (
-            <div>className="alert alert-danger">{this.state.error}</div>
-          )}
           <div className="form-group">
             <label forhtml="Password">Password</label>
             <input
@@ -68,7 +81,13 @@ class registerForm extends Component {
               onChange={this.handleChange}
               value={this.state.account.password}
               name="password"
+              error={this.state.errors.password}
             />
+            {this.state.errors.password && (
+              <div className="alert alert-danger">
+                {this.state.errors.password}
+              </div>
+            )}
           </div>
           <div className="form-group">
             <label forhtml="Name">Name</label>
@@ -79,12 +98,17 @@ class registerForm extends Component {
               onChange={this.handleChange}
               value={this.state.account.name}
               name="name"
+              error={this.state.errors.name}
             />
+            {this.state.errors.name && (
+              <div className="alert alert-danger">{this.state.errors.name}</div>
+            )}
           </div>
-          {this.state.error && (
-            <div>className="alert alert-danger">{this.state.error}</div>
-          )}
-          <button type="submit" className="btn btn-primary">
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={this.validate()}
+          >
             Submit
           </button>
         </form>
