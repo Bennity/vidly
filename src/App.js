@@ -26,6 +26,8 @@ class App extends Component {
   };
 
   handleDelete = id => {
+    const movies = this.state.genre.filter(obj => obj._id !== id);
+    this.setState({ movies });
     const genre = this.state.genre.filter(obj => obj._id !== id);
     this.setState({ genre });
   };
@@ -69,9 +71,11 @@ class App extends Component {
               {...props}
               movies={this.state.movies}
               genre={this.state.genre}
-              length={this.state.genre.length}
+              genreLength={this.state.genre.length}
+              movieLength={this.state.movies.length}
               onGenreChange={this.handleGenreChange}
               pageSize={this.state.pageSize}
+              currentPage={this.state.currentPage}
               onDelete={this.handleDelete}
               onLiked={this.fillHeart}
             />

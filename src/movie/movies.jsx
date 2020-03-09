@@ -6,7 +6,7 @@ import Genre from "../genre/genre";
 const movies = props => {
   return (
     <React.Fragment>
-      <p>Showing {props.length} movies in the Database.</p>
+      <p>Showing {props.genreLength} movies in the Database.</p>
       <Genre
         genre={props.movies.map(obj => obj.genre.name)}
         onGenreChange={props.onGenreChange}
@@ -21,21 +21,23 @@ const movies = props => {
           </tr>
         </thead>
         <tbody>
-          {paginate(props.genre, props.currentPage, props.pageSize).map(
-            movie => (
-              <Movie
-                key={movie._id}
-                _id={movie._id}
-                onDelete={props.onDelete}
-                onLiked={props.onLiked}
-                title={movie.title}
-                genre={movie.genre.name}
-                numberInStock={movie.numberInStock}
-                dailyRentalRate={movie.dailyRentalRate}
-                favorite={movie.liked}
-              />
-            )
-          )}
+          {paginate(
+            props.genre.length === 0 ? props.movies : props.genre,
+            props.currentPage,
+            props.pageSize
+          ).map(movie => (
+            <Movie
+              key={movie._id}
+              _id={movie._id}
+              onDelete={props.onDelete}
+              onLiked={props.onLiked}
+              title={movie.title}
+              genre={movie.genre.name}
+              numberInStock={movie.numberInStock}
+              dailyRentalRate={movie.dailyRentalRate}
+              favorite={movie.liked}
+            />
+          ))}
         </tbody>
       </table>
     </React.Fragment>
