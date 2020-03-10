@@ -16,9 +16,6 @@ const movies = props => {
         genre={props.movies.map(obj => obj.genre.name)}
         onGenreChange={props.onGenreChange}
       />
-      <button type="submit" className="btn btn-primary">
-        New Movie
-      </button>
       <table className="table">
         <thead>
           <tr>

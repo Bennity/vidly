@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import Joi from "joi-browser";
+import { Redirect } from "react-router-dom";
+import { saveMovie } from "../services/fakeMovieService";
 
 class MovieForm extends Component {
   handleSubmit = e => {
@@ -7,10 +9,38 @@ class MovieForm extends Component {
     const errors = this.validate();
     this.setState({ errors: errors || {} });
     if (errors) return;
+    this.addToMovies(e);
     console.log("submit");
   };
 
+  /*  {
+    _id: "5b21ca3eeb7f6fbccd471821",
+    title: "The Avengers",
+    genre: { _id: "5b21ca3eeb7f6fbccd471818", name: "Action" },
+    numberInStock: 7,
+    dailyRentalRate: 3.5
+  } */
+
+  addToMovies = () => {
+    const movie_id = 1 + this.state.counter;
+    console.log(movie_id);
+    const genre_id = 1 + this.state.counter;
+    this.state.counter++;
+
+    const movieobject = {
+      //_id: movie_id.toString(),
+      title: this.state.account.title,
+      genre: { _id: genre_id.toString(), name: this.state.account.genre },
+      numberinstock: this.state.account.numberinstock,
+      rate: this.state.account.rate
+    };
+    console.log(movieobject);
+
+    saveMovie(movieobject);
+  };
+
   state = {
+    counter: 0,
     account: { title: "", genre: "", numberinstock: "", rate: "" },
     errors: {}
   };
@@ -129,6 +159,7 @@ class MovieForm extends Component {
             className="btn btn-primary"
             onClick={this.handleSubmit}
             disabled={this.validate()}
+            onClick={() => this.props.history.push("/movies")}
           >
             Save
           </button>
