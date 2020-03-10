@@ -9,6 +9,7 @@ import NotFound from "./not found/notFound";
 import MovieForm from "./movie/movieForm";
 import LoginForm from "./forms/loginForm";
 import RegisterForm from "./forms/registerForm";
+import NewMovie from "./movie/newMovie";
 
 //implement sort and orderby mit lodash
 //Jquery lernen
@@ -73,6 +74,7 @@ class App extends Component {
         <Navbar />
         <Switch>
           <Route path="/Movies/:id" component={MovieForm} />
+          <Route path="/NewMovie" component={NewMovie} />
           <Route
             path="/Movies"
             render={props => (

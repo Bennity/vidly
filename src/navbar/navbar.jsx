@@ -45,6 +45,11 @@ const navbar = props => {
               <Link to="/Register">Register</Link>
             </NavLink>
           </li>
+          <li className="nav-item">
+            <NavLink className="nav-link" to="NewMovie">
+              <Link to="NewMovie">New Movie</Link>
+            </NavLink>
+          </li>
         </ul>
       </div>
     </nav>
