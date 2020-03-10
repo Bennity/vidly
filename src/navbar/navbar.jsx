@@ -46,8 +46,8 @@ const navbar = props => {
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink className="nav-link" to="NewMovie">
-              <Link to="NewMovie">New Movie</Link>
+            <NavLink className="nav-link" to="/Movies/New">
+              <Link to="/Movies/New">New Movie</Link>
             </NavLink>
           </li>
         </ul>
