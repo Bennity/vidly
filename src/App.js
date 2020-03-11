@@ -9,6 +9,7 @@ import NotFound from "./not found/notFound";
 import MovieForm from "./movie/movieForm";
 import LoginForm from "./forms/loginForm";
 import RegisterForm from "./forms/registerForm";
+import Search from "./search/search";
 
 //implement sort and orderby mit lodash
 //Jquery lernen
@@ -69,10 +70,22 @@ class App extends Component {
     }
   };
 
+  handleSearch = e => {
+    e.preventDefault();
+    const input = e.currentTarget.value;
+    const genre = this.state.movies.filter(
+      obj =>
+        obj.title[e.currentTarget.value.length - 1] === input[input.length - 1]
+    );
+
+    this.setState({ genre });
+  };
+
   render() {
     return (
       <React.Fragment>
         <Navbar />
+        <Search onSearch={this.handleSearch} />
         <Switch>
           <Route
             path="/Movies/:id"
