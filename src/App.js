@@ -13,6 +13,9 @@ import RegisterForm from "./forms/registerForm";
 //implement sort and orderby mit lodash
 //Jquery lernen
 //Specific routes on the top!!!
+/* Yes. All false, 0, empty strings '' and "", NaN, undefined, and null are always evaluated as false; everything else is true.
+And in your example, b is false after evaluation. (I think you mistakenly wrote true) */
+//Object.assign merges objects together ULTRA USEFULLL!!!!
 
 class App extends Component {
   fetchMovies = () => {
@@ -62,7 +65,6 @@ class App extends Component {
       this.setState({ genre: movies });
     } else {
       const movies = this.state.movies.filter(obj => obj.genre.name === genre);
-      console.log(movies);
       this.setState({ genre: movies, currentPage: 1 });
     }
   };
@@ -72,8 +74,18 @@ class App extends Component {
       <React.Fragment>
         <Navbar />
         <Switch>
-          <Route path="/Movies/:id" component={MovieForm} />
-          <Route path="/Movies/new" component={MovieForm} />
+          <Route
+            path="/Movies/:id"
+            render={props => (
+              <MovieForm {...props} movies={this.state.movies} />
+            )}
+          />
+          <Route
+            path="/Movies/new"
+            render={props => (
+              <MovieForm {...props} movies={this.state.movies} />
+            )}
+          />
           <Route
             path="/Movies"
             render={props => (

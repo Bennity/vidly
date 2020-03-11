@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Joi from "joi-browser";
-import { Redirect } from "react-router-dom";
-import { saveMovie } from "../services/fakeMovieService";
+import { saveMovie, getMovie } from "../services/fakeMovieService";
 
 class MovieForm extends Component {
   handleSubmit = e => {
@@ -11,6 +10,39 @@ class MovieForm extends Component {
     if (errors) return;
     this.addToMovies(e);
     console.log("submit");
+    this.props.history.push("/movies");
+  };
+
+  componentDidMount = () => {
+    if (this.props.match.params.id != "New") {
+      const movies = getMovie(this.props.match.params.id);
+      this.setState({ movies });
+    }
+  };
+
+  addToMovies = () => {
+    const movie_id = 1 + this.state.counter;
+    const genre_id = 1 + this.state.counter;
+    this.state.counter++;
+
+    const movieobject = {
+      _id: movie_id.toString(),
+      title: this.state.movies.title,
+      genre: { _id: genre_id.toString(), name: this.state.movies.genre },
+      numberInStock: this.state.movies.numberInStock,
+      dailyRentalRate: this.state.movies.dailyRentalRate,
+      liked: "fa fa-heart-o"
+    };
+    if (this.state.movies._id === "") {
+      this.props.movies.push(movieobject);
+    } else {
+      this.props.movies.splice(
+        this.props.movies.filter(obj => this.state.movies._id === obj._id),
+        1
+      );
+      this.props.movies.push(movieobject);
+    }
+    //saveMovie(movieobject);
   };
 
   /*  {
@@ -21,35 +53,25 @@ class MovieForm extends Component {
     dailyRentalRate: 3.5
   } */
 
-  addToMovies = () => {
-    const movie_id = 1 + this.state.counter;
-    console.log(movie_id);
-    const genre_id = 1 + this.state.counter;
-    this.state.counter++;
-
-    const movieobject = {
-      //_id: movie_id.toString(),
-      title: this.state.account.title,
-      genre: { _id: genre_id.toString(), name: this.state.account.genre },
-      numberinstock: this.state.account.numberinstock,
-      rate: this.state.account.rate
-    };
-    console.log(movieobject);
-
-    saveMovie(movieobject);
-  };
-
   state = {
     counter: 0,
-    account: { title: "", genre: "", numberinstock: "", rate: "" },
+    movies: {
+      _id: "",
+      title: "",
+      genre: { _id: "", name: "" },
+      numberInStock: "",
+      dailyRentalRate: ""
+    },
     errors: {}
   };
 
   schema = {
+    _id: Joi.string().allow(""),
     title: Joi.string().required(),
     genre: Joi.string().required(),
-    numberinstock: Joi.string().required(),
-    rate: Joi.string().required()
+    numberInStock: Joi.number().required(),
+    dailyRentalRate: Joi.number().required(),
+    liked: Joi.string()
   };
 
   handleChange = e => {
@@ -58,13 +80,13 @@ class MovieForm extends Component {
     if (errorMessage) errors[e.currentTarget.name] = errorMessage;
     else delete errors[e.currentTarget.name];
 
-    const account = { ...this.state.account };
-    account[e.currentTarget.name] = e.currentTarget.value;
-    this.setState({ account, errors });
+    const movies = { ...this.state.movies };
+    movies[e.currentTarget.name] = e.currentTarget.value;
+    this.setState({ movies, errors });
   };
 
   validate = () => {
-    const result = Joi.validate(this.state.account, this.schema);
+    const result = Joi.validate(this.state.movies, this.schema);
     console.log(result);
     if (!result.error) return null;
 
@@ -88,15 +110,16 @@ class MovieForm extends Component {
           <h1>Movie Form</h1>
           <form>
             <div class="form-group">
-              <label for="title">Title</label>
+              <label for="title">Title </label>
               <input
                 type="text"
                 class="form-control"
                 id="title"
-                placeholder="My New Movie"
                 name="title"
+                value={this.state.movies.title}
                 onChange={this.handleChange}
                 error={this.state.errors.name}
+                //value={}
               />
               {this.state.errors.name && (
                 <div className="alert alert-danger">
@@ -111,6 +134,7 @@ class MovieForm extends Component {
                 id="genre"
                 name="genre"
                 onChange={this.handleChange}
+                value={this.state.movies.genre.name}
               >
                 <option>Action</option>
                 <option>Comedy</option>
@@ -123,14 +147,15 @@ class MovieForm extends Component {
               )}
             </div>
             <div class="form-group">
-              <label for="numberinstock">Number in Stock</label>
+              <label for="numberInStock">Number in Stock</label>
               <input
                 type="text"
                 class="form-control"
-                id="numberinstock"
-                name="numberinstock"
+                id="numberInStock"
+                name="numberInStock"
                 error={this.state.errors.name}
                 onChange={this.handleChange}
+                value={this.state.movies.numberInStock}
               ></input>
               {this.state.errors.name && (
                 <div className="alert alert-danger">
@@ -139,14 +164,15 @@ class MovieForm extends Component {
               )}
             </div>
             <div class="form-group">
-              <label for="rate">Rate</label>
+              <label for="dailyRentalRate">Daily Rental Rate</label>
               <input
                 type="text"
                 class="form-control"
-                id="rate"
-                name="rate"
+                id="dailyRentalRate"
+                name="dailyRentalRate"
                 error={this.state.errors.name}
                 onChange={this.handleChange}
+                value={this.state.movies.dailyRentalRate}
               ></input>
               {this.state.errors.name && (
                 <div className="alert alert-danger">
@@ -159,7 +185,7 @@ class MovieForm extends Component {
             className="btn btn-primary"
             onClick={this.handleSubmit}
             disabled={this.validate()}
-            onClick={() => this.props.history.push("/movies")}
+            // onClick={() => this.props.history.push("/movies")}
           >
             Save
           </button>
