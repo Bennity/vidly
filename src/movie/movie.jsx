@@ -24,7 +24,7 @@ const movie = props => {
         <td>
           <i
             onClick={() => props.onLiked(props._id)}
-            className={props.favorite}
+            className={props.heart}
             aria-hidden="false"
           ></i>
         </td>

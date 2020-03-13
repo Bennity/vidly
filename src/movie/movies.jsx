@@ -7,11 +7,7 @@ import Pagination from "../pagination/pagination";
 const movies = props => {
   return (
     <React.Fragment>
-      <p>
-        Showing{" "}
-        {props.genre.length === 0 ? props.movies.length : props.genre.length}{" "}
-        movies in the Database.
-      </p>
+      <p>Showing {props.movies.length} movies in the Database.</p>
       <Genre
         genre={props.movies.map(obj => obj.genre.name)}
         onGenreChange={props.onGenreChange}
@@ -26,23 +22,20 @@ const movies = props => {
           </tr>
         </thead>
         <tbody>
-          {paginate(
-            props.genre.length === 0 ? props.movies : props.genre,
-            props.currentPage,
-            props.pageSize
-          ).map(movie => (
-            <Movie
-              key={movie._id}
-              _id={movie._id}
-              title={movie.title}
-              onDelete={props.onDelete}
-              onLiked={props.onLiked}
-              genre={movie.genre.name}
-              numberInStock={movie.numberInStock}
-              dailyRentalRate={movie.dailyRentalRate}
-              favorite={movie.liked}
-            />
-          ))}
+          {paginate(props.movies, props.currentPage, props.pageSize).map(
+            movie => (
+              <Movie
+                key={movie._id}
+                _id={movie._id}
+                title={movie.title}
+                onDelete={props.onDelete}
+                onLiked={props.onLiked}
+                numberInStock={movie.numberInStock}
+                dailyRentalRate={movie.dailyRentalRate}
+                heart={movie.liked}
+              />
+            )
+          )}
         </tbody>
         <Pagination
           itemsCount={props.movies.length}

@@ -17,6 +17,7 @@ import Search from "./search/search";
 /* Yes. All false, 0, empty strings '' and "", NaN, undefined, and null are always evaluated as false; everything else is true.
 And in your example, b is false after evaluation. (I think you mistakenly wrote true) */
 //Object.assign merges objects together ULTRA USEFULLL!!!!
+//CODEREFACTOR vidly --> useState und useEffect --> TypeScript Interfaces
 
 class App extends Component {
   fetchMovies = () => {
@@ -32,15 +33,12 @@ class App extends Component {
   state = {
     movies: this.fetchMovies(),
     pageSize: 4,
-    currentPage: 1,
-    genre: []
+    currentPage: 1
   };
 
   handleDelete = id => {
     const movies = this.state.genre.filter(obj => obj._id !== id);
     this.setState({ movies });
-    const genre = this.state.genre.filter(obj => obj._id !== id);
-    this.setState({ genre });
   };
 
   fillHeart = id => {
@@ -60,25 +58,27 @@ class App extends Component {
     this.setState({ currentPage: page });
   };
 
-  handleGenreChange = genre => {
-    if (genre == "All Genres") {
+  handleGenreChange = genrename => {
+    if (genrename == "All Genres") {
       let movies = this.state.movies.map(obj => obj);
-      this.setState({ genre: movies });
+      this.setState({ movies });
     } else {
-      const movies = this.state.movies.filter(obj => obj.genre.name === genre);
-      this.setState({ genre: movies, currentPage: 1 });
+      const movies = this.state.movies.filter(
+        obj => obj.genre.name === genrename
+      );
+      this.setState({ movies, currentPage: 1 });
     }
   };
 
   handleSearch = e => {
     e.preventDefault();
     const input = e.currentTarget.value;
-    const genre = this.state.movies.filter(
+    const movies = this.state.movies.filter(
       obj =>
         obj.title[e.currentTarget.value.length - 1] === input[input.length - 1]
     );
 
-    this.setState({ genre });
+    this.setState({ movies });
   };
 
   render() {
@@ -105,8 +105,6 @@ class App extends Component {
               <Movies
                 {...props}
                 movies={this.state.movies}
-                genre={this.state.genre}
-                genreLength={this.state.genre.length}
                 movieLength={this.state.movies.length}
                 onGenreChange={this.handleGenreChange}
                 onPageChange={this.handlePageChange}
