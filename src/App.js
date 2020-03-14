@@ -6,17 +6,12 @@ import { getMovies } from "./services/fakeMovieService";
 import Rentals from "./common/rentals";
 import Customers from "./common/customers";
 import NotFound from "./common/notFound";
-import MovieForm from "./movie/movieForm";
+import MovieForm from "./common/movieForm";
 import LoginForm from "./common/loginForm";
 import RegisterForm from "./common/registerForm";
 import Search from "./common/search";
+import _ from "lodash";
 
-//implement sort and orderby mit lodash
-//Jquery lernen
-//Specific routes on the top!!!
-// Yes. All false, 0, empty strings '' and "", NaN, undefined, and null are always evaluated as false; everything else is true.
-
-//Object.assign merges objects together ULTRA USEFULLL!!!!
 //CODEREFACTOR vidly --> useState und useEffect --> TypeScript Interfaces
 
 class App extends Component {
@@ -31,20 +26,28 @@ class App extends Component {
   };
 
   state = {
-    movies: this.fetchMovies(),
+    movies: [],
+    genres: [],
+    search: [],
+    sort: [],
+    selector: "",
     pageSize: 4,
     currentPage: 1
   };
 
+  componentDidMount() {
+    this.setState({ movies: this.fetchMovies(), selector: "All Genres" });
+  }
+
   handleDelete = id => {
-    const movies = this.state.genre.filter(obj => obj._id !== id);
-    this.setState({ movies });
+    const movies = this.state.movies.filter(obj => obj._id !== id);
+    const genres = this.state.genres.filter(obj => obj._id !== id);
+    this.setState({ movies, genres });
   };
 
   fillHeart = id => {
     const movies = [...this.state.movies];
     const movie = movies.filter(obj => obj._id === id);
-    //this.addtoFavs(movie);
     if (movie.map(obj => obj.liked) == "fa fa-heart-o") {
       movie.map(obj => (obj.liked = "fa fa-heart"));
       this.setState({ movies });
@@ -60,25 +63,40 @@ class App extends Component {
 
   handleGenreChange = genrename => {
     if (genrename == "All Genres") {
-      let movies = this.state.movies.map(obj => obj);
-      this.setState({ movies });
+      const movies = this.state.movies.map(obj => obj);
+      this.setState({ movies, selector: genrename });
     } else {
-      const movies = this.state.movies.filter(
+      const genres = this.state.movies.filter(
         obj => obj.genre.name === genrename
       );
-      this.setState({ movies, currentPage: 1 });
+      this.setState({ genres, currentPage: 1, selector: "genres" });
     }
   };
 
   handleSearch = e => {
     e.preventDefault();
     const input = e.currentTarget.value;
-    const movies = this.state.movies.filter(
+    const search = this.state.movies.filter(
       obj =>
         obj.title[e.currentTarget.value.length - 1] === input[input.length - 1]
     );
 
-    this.setState({ movies });
+    this.setState({ search, selector: "search" });
+  };
+
+  handleSort = (column, order) => {
+    if (order == "asc") {
+      const sort = _.orderBy(this.state.movies, [column], [order]);
+      this.setState({ sort, selector: "sort" });
+    } else {
+      const sort = _.orderBy(this.state.movies, [column], ["desc"]);
+      this.setState({ sort, selector: "sort" });
+    }
+  };
+
+  sortIcon = order => {
+    if (order == "asc") return <i className="fa fa-sort-asc" />;
+    else if (order == "desc") return <i className="fa fa-sort-desc" />;
   };
 
   render() {
@@ -104,7 +122,11 @@ class App extends Component {
             render={props => (
               <Movies
                 {...props}
+                selector={this.state.selector}
                 movies={this.state.movies}
+                genres={this.state.genres}
+                search={this.state.search}
+                sort={this.state.sort}
                 movieLength={this.state.movies.length}
                 onGenreChange={this.handleGenreChange}
                 onPageChange={this.handlePageChange}
@@ -112,6 +134,8 @@ class App extends Component {
                 currentPage={this.state.currentPage}
                 onDelete={this.handleDelete}
                 onLiked={this.fillHeart}
+                onSort={this.handleSort}
+                sortIcon={this.sortIcon}
               />
             )}
           />
