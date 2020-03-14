@@ -1,21 +1,21 @@
 import React, { Component } from "react";
-import Movies from "./movie/movies";
+import Movies from "./common/movies";
 import { Route, Redirect, Switch } from "react-router-dom";
-import Navbar from "./navbar/navbar";
+import Navbar from "./common/navbar";
 import { getMovies } from "./services/fakeMovieService";
-import Rentals from "./rentals/rentals";
-import Customers from "./customers/customers";
-import NotFound from "./not found/notFound";
+import Rentals from "./common/rentals";
+import Customers from "./common/customers";
+import NotFound from "./common/notFound";
 import MovieForm from "./movie/movieForm";
-import LoginForm from "./forms/loginForm";
-import RegisterForm from "./forms/registerForm";
-import Search from "./search/search";
+import LoginForm from "./common/loginForm";
+import RegisterForm from "./common/registerForm";
+import Search from "./common/search";
 
 //implement sort and orderby mit lodash
 //Jquery lernen
 //Specific routes on the top!!!
-/* Yes. All false, 0, empty strings '' and "", NaN, undefined, and null are always evaluated as false; everything else is true.
-And in your example, b is false after evaluation. (I think you mistakenly wrote true) */
+// Yes. All false, 0, empty strings '' and "", NaN, undefined, and null are always evaluated as false; everything else is true.
+
 //Object.assign merges objects together ULTRA USEFULLL!!!!
 //CODEREFACTOR vidly --> useState und useEffect --> TypeScript Interfaces
 

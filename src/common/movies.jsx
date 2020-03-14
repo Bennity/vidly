@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Movie from "./movie";
 import { paginate } from "../utils/paginate";
-import Genre from "../genre/genre";
-import Pagination from "../pagination/pagination";
+import Genre from "./genre";
+import Pagination from "./pagination";
 
 const movies = props => {
   return (
