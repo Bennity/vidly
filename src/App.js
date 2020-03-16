@@ -31,21 +31,29 @@ class App extends Component {
     search: [],
     sort: [],
     selector: "",
+    order: "",
     pageSize: 4,
     currentPage: 1
   };
 
   componentDidMount() {
-    this.setState({ movies: this.fetchMovies(), selector: "All Genres" });
+    this.setState({
+      movies: this.fetchMovies(),
+      selector: "All Genres",
+      order: "asc"
+    });
   }
 
+  //Mit Selector code cleaner machen
   handleDelete = id => {
     const movies = this.state.movies.filter(obj => obj._id !== id);
     const genres = this.state.genres.filter(obj => obj._id !== id);
-    this.setState({ movies, genres });
+    const sort = this.state.sort.filter(obj => obj._id !== id);
+    const search = this.state.search.filter(obj => obj._id !== id);
+    this.setState({ movies, genres, sort, search });
   };
 
-  fillHeart = id => {
+  handleLike = id => {
     const movies = [...this.state.movies];
     const movie = movies.filter(obj => obj._id === id);
     if (movie.map(obj => obj.liked) == "fa fa-heart-o") {
@@ -84,19 +92,29 @@ class App extends Component {
     this.setState({ search, selector: "search" });
   };
 
-  handleSort = (column, order) => {
-    if (order == "asc") {
-      const sort = _.orderBy(this.state.movies, [column], [order]);
-      this.setState({ sort, selector: "sort" });
-    } else {
-      const sort = _.orderBy(this.state.movies, [column], ["desc"]);
-      this.setState({ sort, selector: "sort" });
+  handleSort = column => {
+    if (this.state.order === "asc") this.setState({ order: "desc" });
+    else this.setState({ order: "asc" });
+
+    if (this.state.selector === "All Genres") {
+      const movies = _.orderBy(this.state.movies, [column], [this.state.order]);
+      this.setState({ movies, selector: "All Genres" });
+    }
+
+    if (this.state.selector === "genres") {
+      const genres = _.orderBy(this.state.genres, [column], [this.state.order]);
+      this.setState({ genres, selector: "genres" });
+    }
+
+    if (this.state.selector === "search") {
+      const search = _.orderBy(this.state.search, [column], [this.state.order]);
+      this.setState({ search, selector: "search" });
     }
   };
 
-  sortIcon = order => {
-    if (order == "asc") return <i className="fa fa-sort-asc" />;
-    else if (order == "desc") return <i className="fa fa-sort-desc" />;
+  sortIcon = () => {
+    if (this.state.order === "asc") return <i className="fa fa-sort-asc" />;
+    else return <i className="fa fa-sort-desc" />;
   };
 
   render() {
@@ -133,7 +151,7 @@ class App extends Component {
                 pageSize={this.state.pageSize}
                 currentPage={this.state.currentPage}
                 onDelete={this.handleDelete}
-                onLiked={this.fillHeart}
+                onLike={this.handleLike}
                 onSort={this.handleSort}
                 sortIcon={this.sortIcon}
               />

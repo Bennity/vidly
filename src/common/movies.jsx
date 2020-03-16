@@ -11,8 +11,6 @@ class movies extends Component {
         return this.props.genres;
       case "search":
         return this.props.search;
-      case "sort":
-        return this.props.sort;
       default:
         return this.props.movies;
     }
@@ -29,17 +27,23 @@ class movies extends Component {
         <table className="table">
           <thead>
             <tr>
-              <th scope="col" onClick={() => this.props.onSort("title", "asc")}>
-                Title {this.props.sortIcon()}
+              <th scope="col" onClick={() => this.props.onSort("title")}>
+                Title {() => this.props.sortIcon("title")}
               </th>
-              <th scope="col" onClick={() => this.props.onSort("Genre")}>
-                Genre {this.props.sortIcon()}
+              <th scope="col" onClick={() => this.props.onSort("genre.name")}>
+                Genre {() => this.props.sortIcon("genre")}
               </th>
-              <th scope="col" onClick={() => this.props.onSort("Stock")}>
-                Stock {this.props.sortIcon()}
+              <th
+                scope="col"
+                onClick={() => this.props.onSort("numberInStock")}
+              >
+                Stock {() => this.props.sortIcon("numberInStock")}
               </th>
-              <th scope="col" onClick={() => this.props.onSort("Rate")}>
-                Rate {this.props.sortIcon()}
+              <th
+                scope="col"
+                onClick={() => this.props.onSort("dailyRentalRate")}
+              >
+                Rate {() => this.props.sortIcon("dailyRentalRate")}
               </th>
             </tr>
           </thead>
@@ -54,11 +58,11 @@ class movies extends Component {
                 _id={movie._id}
                 title={movie.title}
                 onDelete={this.props.onDelete}
-                onLiked={this.props.onLiked}
+                onLike={this.props.onLike}
                 genre={movie.genre.name}
                 numberInStock={movie.numberInStock}
                 dailyRentalRate={movie.dailyRentalRate}
-                favorite={movie.liked}
+                likeIcon={movie.liked}
               />
             ))}
           </tbody>
