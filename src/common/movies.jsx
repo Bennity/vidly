@@ -28,22 +28,22 @@ class movies extends Component {
           <thead>
             <tr>
               <th scope="col" onClick={() => this.props.onSort("title")}>
-                Title {() => this.props.sortIcon("title")}
+                Title
               </th>
               <th scope="col" onClick={() => this.props.onSort("genre.name")}>
-                Genre {() => this.props.sortIcon("genre")}
+                Genre
               </th>
               <th
                 scope="col"
                 onClick={() => this.props.onSort("numberInStock")}
               >
-                Stock {() => this.props.sortIcon("numberInStock")}
+                Stock
               </th>
               <th
                 scope="col"
                 onClick={() => this.props.onSort("dailyRentalRate")}
               >
-                Rate {() => this.props.sortIcon("dailyRentalRate")}
+                Rate
               </th>
             </tr>
           </thead>

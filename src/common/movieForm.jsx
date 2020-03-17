@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Joi from "joi-browser";
-import { saveMovie, getMovie } from "../services/fakeMovieService";
+import { getMovie } from "../services/fakeMovieService";
 
 class MovieForm extends Component {
   handleSubmit = e => {
@@ -9,12 +9,11 @@ class MovieForm extends Component {
     this.setState({ errors: errors || {} });
     if (errors) return;
     this.addToMovies(e);
-    console.log("submit");
-    this.props.history.push("/movies");
+    //this.props.history.push("/movies");
   };
 
   componentDidMount = () => {
-    if (this.props.match.params.id != "New") {
+    if (this.props.match.params.id !== "New") {
       const movies = getMovie(this.props.match.params.id);
       this.setState({ movies });
     }
@@ -23,7 +22,7 @@ class MovieForm extends Component {
   addToMovies = () => {
     const movie_id = 1 + this.state.counter;
     const genre_id = 1 + this.state.counter;
-    this.state.counter++;
+    this.setState({ counter: this.state.counter + 1 });
 
     const movieobject = {
       _id: movie_id.toString(),
@@ -44,14 +43,6 @@ class MovieForm extends Component {
     }
     //saveMovie(movieobject);
   };
-
-  /*  {
-    _id: "5b21ca3eeb7f6fbccd471821",
-    title: "The Avengers",
-    genre: { _id: "5b21ca3eeb7f6fbccd471818", name: "Action" },
-    numberInStock: 7,
-    dailyRentalRate: 3.5
-  } */
 
   state = {
     counter: 0,
@@ -87,7 +78,6 @@ class MovieForm extends Component {
 
   validate = () => {
     const result = Joi.validate(this.state.movies, this.schema);
-    console.log(result);
     if (!result.error) return null;
 
     const errors = {};
@@ -119,7 +109,6 @@ class MovieForm extends Component {
                 value={this.state.movies.title}
                 onChange={this.handleChange}
                 error={this.state.errors.name}
-                //value={}
               />
               {this.state.errors.name && (
                 <div className="alert alert-danger">
@@ -185,7 +174,6 @@ class MovieForm extends Component {
             className="btn btn-primary"
             onClick={this.handleSubmit}
             disabled={this.validate()}
-            // onClick={() => this.props.history.push("/movies")}
           >
             Save
           </button>

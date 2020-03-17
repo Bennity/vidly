@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import _ from "lodash";
 
 const pagination = props => {
@@ -13,9 +13,7 @@ const pagination = props => {
             className="page-item"
             onClick={() => props.onPageChange(page)}
           >
-            <a className="page-link" href="#">
-              {page}
-            </a>
+            {page}
           </li>
         ))}
       </ul>

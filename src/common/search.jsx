@@ -1,17 +1,15 @@
-import React, { Component } from "react";
+import React from "react";
 
-class search extends Component {
-  render() {
-    return (
-      <input
-        class="form-control"
-        type="text"
-        placeholder="Search"
-        aria-label="Search"
-        onChange={this.props.onSearch}
-      />
-    );
-  }
-}
+const search = props => {
+  return (
+    <input
+      class="form-control"
+      type="text"
+      placeholder="Search"
+      aria-label="Search"
+      onChange={props.onSearch}
+    />
+  );
+};
 
 export default search;
