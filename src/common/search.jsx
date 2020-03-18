@@ -3,7 +3,7 @@ import React from "react";
 const search = props => {
   return (
     <input
-      class="form-control"
+      className="form-control"
       type="text"
       placeholder="Search"
       aria-label="Search"

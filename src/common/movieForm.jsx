@@ -100,7 +100,7 @@ class MovieForm extends Component {
           <h1>Movie Form</h1>
           <form>
             <div class="form-group">
-              <label for="title">Title </label>
+              <label htmlfor="title">Title </label>
               <input
                 type="text"
                 class="form-control"
@@ -117,7 +117,7 @@ class MovieForm extends Component {
               )}
             </div>
             <div class="form-group">
-              <label for="genre">Genre</label>
+              <label htmlfor="genre">Genre</label>
               <select
                 class="form-control"
                 id="genre"
@@ -136,7 +136,7 @@ class MovieForm extends Component {
               )}
             </div>
             <div class="form-group">
-              <label for="numberInStock">Number in Stock</label>
+              <label htmlfor="numberInStock">Number in Stock</label>
               <input
                 type="text"
                 class="form-control"
@@ -153,7 +153,7 @@ class MovieForm extends Component {
               )}
             </div>
             <div class="form-group">
-              <label for="dailyRentalRate">Daily Rental Rate</label>
+              <label htmlfor="dailyRentalRate">Daily Rental Rate</label>
               <input
                 type="text"
                 class="form-control"

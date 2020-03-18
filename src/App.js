@@ -55,14 +55,15 @@ class App extends Component {
 
   handleLike = id => {
     const movies = [...this.state.movies];
-    const movie = movies.filter(obj => obj._id === id);
-    if (movie.map(obj => obj.liked) == "fa fa-heart-o") {
-      movie.map(obj => (obj.liked = "fa fa-heart"));
-      this.setState({ movies });
+    const movie = movies.find(obj => obj._id === id);
+
+    if (movie.liked === "fa fa-heart-o") {
+      movie.liked = "fa fa-heart";
     } else {
-      movie.map(obj => (obj.liked = "fa fa-heart-o"));
-      this.setState({ movies });
+      movie.liked = "fa fa-heart-o";
     }
+
+    this.setState({ movies });
   };
 
   handlePageChange = page => {
@@ -70,7 +71,7 @@ class App extends Component {
   };
 
   handleGenreChange = genrename => {
-    if (genrename == "All Genres") {
+    if (genrename === "All Genres") {
       const movies = this.state.movies.map(obj => obj);
       this.setState({ movies, selector: genrename });
     } else {

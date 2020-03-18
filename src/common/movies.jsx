@@ -66,13 +66,13 @@ class movies extends Component {
               />
             ))}
           </tbody>
-          <Pagination
-            itemsCount={this.props.movies.length}
-            pageSize={this.props.pageSize}
-            currentPage={this.props.currentPage}
-            onPageChange={this.props.onPageChange}
-          />
         </table>
+        <Pagination
+          itemsCount={this.props.movies.length}
+          pageSize={this.props.pageSize}
+          currentPage={this.props.currentPage}
+          onPageChange={this.props.onPageChange}
+        />
       </React.Fragment>
     );
   }
