@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import Movies from "./common/movies";
 import { Route, Redirect, Switch } from "react-router-dom";
 import Navbar from "./common/navbar";
@@ -14,8 +14,27 @@ import _ from "lodash";
 
 //CODEREFACTOR vidly --> useState und useEffect --> TypeScript Interfaces
 
-class App extends Component {
-  fetchMovies = () => {
+/* state = {
+  movies: [],
+  genres: [],
+  search: [],
+  sort: [],
+  selector: "",
+  order: "",
+  pageSize: 4,
+  currentPage: 1
+}; */
+
+/* componentDidMount() {
+  setState({
+    movies: fetchMovies(),
+    selector: "All Genres",
+    order: "asc"
+  });
+} */
+
+const App = () => {
+  const fetchMovies = () => {
     let moviewithliked = [];
     getMovies().map(obj => {
       return moviewithliked.push(
@@ -25,150 +44,137 @@ class App extends Component {
     return moviewithliked;
   };
 
-  state = {
-    movies: [],
-    genres: [],
-    search: [],
-    sort: [],
-    selector: "",
-    order: "",
-    pageSize: 4,
-    currentPage: 1
+  const [movies, setMovies] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const [search, setSearch] = useState([]);
+  const [sort, setSort] = useState([]);
+  const [selector, setSelector] = useState("");
+  const [order, setOrder] = useState("");
+  const [pageSize, setPageSize] = useState(4);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    setMovies(fetchMovies());
+    setSelector("All Genres");
+    setOrder("asc");
+  }, []);
+
+  const handleDelete = id => {
+    setMovies(movies.filter(obj => obj._id !== id));
+    setGenres(genres.filter(obj => obj._id !== id));
+    setSort(sort.filter(obj => obj._id !== id));
+    setSearch(search.filter(obj => obj._id !== id));
   };
 
-  componentDidMount() {
-    this.setState({
-      movies: this.fetchMovies(),
-      selector: "All Genres",
-      order: "asc"
-    });
-  }
-
-  //Mit Selector code cleaner machen
-  handleDelete = id => {
-    const movies = this.state.movies.filter(obj => obj._id !== id);
-    const genres = this.state.genres.filter(obj => obj._id !== id);
-    const sort = this.state.sort.filter(obj => obj._id !== id);
-    const search = this.state.search.filter(obj => obj._id !== id);
-    this.setState({ movies, genres, sort, search });
-  };
-
-  handleLike = id => {
-    const movies = [...this.state.movies];
+  const handleLike = id => {
+    //Refactoring ?
     const movie = movies.find(obj => obj._id === id);
-
     if (movie.liked === "fa fa-heart-o") {
       movie.liked = "fa fa-heart";
     } else {
       movie.liked = "fa fa-heart-o";
     }
-
-    this.setState({ movies });
+    setMovies(movies.map(obj => obj));
   };
 
-  handlePageChange = page => {
-    this.setState({ currentPage: page });
+  const handlePageChange = page => {
+    setCurrentPage(page);
   };
 
-  handleGenreChange = genrename => {
+  const handleGenreChange = genrename => {
     if (genrename === "All Genres") {
-      const movies = this.state.movies.map(obj => obj);
-      this.setState({ movies, selector: genrename });
+      setMovies(movies.map(obj => obj));
+      setSelector(genrename);
     } else {
-      const genres = this.state.movies.filter(
-        obj => obj.genre.name === genrename
-      );
-      this.setState({ genres, currentPage: 1, selector: "genres" });
+      const genres = movies.filter(obj => obj.genre.name === genrename);
+      setGenres(genres);
+      setCurrentPage(1);
+      setSelector("genres");
     }
   };
 
-  handleSearch = e => {
+  const handleSearch = e => {
     e.preventDefault();
     const input = e.currentTarget.value;
-    const search = this.state.movies.filter(
+    const search = movies.filter(
       obj =>
         obj.title[e.currentTarget.value.length - 1] === input[input.length - 1]
     );
 
-    this.setState({ search, selector: "search" });
+    setSearch(search);
+    setSelector("search");
   };
 
-  handleSort = column => {
-    if (this.state.order === "asc") this.setState({ order: "desc" });
-    else this.setState({ order: "asc" });
+  const handleSort = column => {
+    if (order === "asc") setOrder("desc");
+    else setOrder("asc");
 
-    if (this.state.selector === "All Genres") {
-      const movies = _.orderBy(this.state.movies, [column], [this.state.order]);
-      this.setState({ movies, selector: "All Genres" });
+    if (selector === "All Genres") {
+      setMovies(_.orderBy(movies, [column], [order]));
+      setSelector("All Genres");
     }
 
-    if (this.state.selector === "genres") {
-      const genres = _.orderBy(this.state.genres, [column], [this.state.order]);
-      this.setState({ genres, selector: "genres" });
+    if (selector === "genres") {
+      setGenres(_.orderBy(genres, [column], [order]));
+      setSelector("genres");
     }
 
-    if (this.state.selector === "search") {
-      const search = _.orderBy(this.state.search, [column], [this.state.order]);
-      this.setState({ search, selector: "search" });
+    if (selector === "search") {
+      setSearch(_.orderBy(search, [column], [order]));
+      setSelector("search");
     }
   };
 
-  sortIcon = () => {
-    if (this.state.order === "asc") return <i className="fa fa-sort-asc" />;
+  const sortIcon = () => {
+    if (order === "asc") return <i className="fa fa-sort-asc" />;
     else return <i className="fa fa-sort-desc" />;
   };
 
-  render() {
-    return (
-      <React.Fragment>
-        <Navbar />
-        <Search onSearch={this.handleSearch} />
-        <Switch>
-          <Route
-            path="/Movies/:id"
-            render={props => (
-              <MovieForm {...props} movies={this.state.movies} />
-            )}
-          />
-          <Route
-            path="/Movies/new"
-            render={props => (
-              <MovieForm {...props} movies={this.state.movies} />
-            )}
-          />
-          <Route
-            path="/Movies"
-            render={props => (
-              <Movies
-                {...props}
-                selector={this.state.selector}
-                movies={this.state.movies}
-                genres={this.state.genres}
-                search={this.state.search}
-                sort={this.state.sort}
-                movieLength={this.state.movies.length}
-                onGenreChange={this.handleGenreChange}
-                onPageChange={this.handlePageChange}
-                pageSize={this.state.pageSize}
-                currentPage={this.state.currentPage}
-                onDelete={this.handleDelete}
-                onLike={this.handleLike}
-                onSort={this.handleSort}
-                sortIcon={this.sortIcon}
-              />
-            )}
-          />
-          <Redirect exact from="/" to="/Movies" />
-          <Route path="/Customers" component={Customers} />
-          <Route path="/Rentals" component={Rentals} />
-          <Route path="/Login" component={LoginForm} />
-          <Route path="/Register" component={RegisterForm} />
-          <Route path="/not-found" component={NotFound} />
-          <Redirect to="/not-found" />
-        </Switch>
-      </React.Fragment>
-    );
-  }
-}
+  return (
+    <React.Fragment>
+      <Navbar />
+      <Search onSearch={handleSearch} />
+      <Switch>
+        <Route
+          path="/Movies/:id"
+          render={props => <MovieForm {...props} movies={movies} />}
+        />
+        <Route
+          path="/Movies/new"
+          render={props => <MovieForm {...props} movies={movies} />}
+        />
+        <Route
+          path="/Movies"
+          render={props => (
+            <Movies
+              {...props}
+              selector={selector}
+              movies={movies}
+              genres={genres}
+              search={search}
+              sort={sort}
+              movieLength={movies.length}
+              onGenreChange={handleGenreChange}
+              onPageChange={handlePageChange}
+              pageSize={pageSize}
+              currentPage={currentPage}
+              onDelete={handleDelete}
+              onLike={handleLike}
+              onSort={handleSort}
+              sortIcon={sortIcon}
+            />
+          )}
+        />
+        <Redirect exact from="/" to="/Movies" />
+        <Route path="/Customers" component={Customers} />
+        <Route path="/Rentals" component={Rentals} />
+        <Route path="/Login" component={LoginForm} />
+        <Route path="/Register" component={RegisterForm} />
+        <Route path="/not-found" component={NotFound} />
+        <Redirect to="/not-found" />
+      </Switch>
+    </React.Fragment>
+  );
+};
 
 export default App;

@@ -9,7 +9,7 @@ class MovieForm extends Component {
     this.setState({ errors: errors || {} });
     if (errors) return;
     this.addToMovies(e);
-    //this.props.history.push("/movies");
+    this.props.history.push("/movies");
   };
 
   componentDidMount = () => {
@@ -23,6 +23,7 @@ class MovieForm extends Component {
     const movie_id = 1 + this.state.counter;
     const genre_id = 1 + this.state.counter;
     this.setState({ counter: this.state.counter + 1 });
+    //ID ist immer 1, state wird mit 0 inititialisiert...
 
     const movieobject = {
       _id: movie_id.toString(),
